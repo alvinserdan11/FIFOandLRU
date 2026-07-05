@@ -1,0 +1,199 @@
+
+    html, body{
+        min-height: 100%;
+    }
+
+    body{
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        background-color: #1bbf6e;
+    }
+    
+    #title{
+        font-family: 'Baloo Bhai 2', cursive;
+        align-items: center;
+        justify-content: center;
+        display: flex;
+        flex-direction: column;
+        text-align: center;
+        width: 100%;
+        color: white;
+        height: 250px;
+        border-radius: 0px 0px 30px 30px;
+        background-color: #1bbf6e;
+    }
+
+
+    #title h1{
+        margin-bottom: 0px;
+    padding: 3px;
+    font-size: 4rem;
+    /* color: aliceblue; */
+    margin-top: 0px;
+    }
+
+    #title h3{
+        margin-top: 0px;
+    font-size: 2rem;
+    margin-bottom: 5px;
+    /* color: aliceblue; */
+    }
+    
+    #title h4{
+        margin-top: 5px;
+        font-size: 1.5rem;
+    }
+
+    #intro {
+        background-color: #1bbf6e;
+        border-radius: 30px 30px 0px 0px;
+        margin-top: 17px;
+        height: auto;
+    }
+
+    #intro p{
+        font-family: 'Baloo Bhai 2', cursive;
+        text-align: center;
+        margin: 15px 117px;
+        font-size: 1.33rem;
+        /* border: 2px solid black; */
+        padding: 11px 51px;
+        color: rgb(4 69 126);
+        /* background-color: #ffffffd1; */
+        border-radius: 30px 30px 0px 0px;
+        margin-top: 39px;
+        padding-bottom: 43px;
+        /* background-image: url("im2.jpg"); */
+        /* background-color: #29440dde; */
+        /* background-color: #0b1d9ede; */
+        background-color: rgb(232, 244, 255);
+        /* height: 231px; */
+        height: auto;
+    }
+
+    .example {
+        margin-top: 4px;
+        height: auto;
+        width: 100%;
+        align-items: center;
+        justify-content: center;
+        display: flex;
+        background-color: #1bbf6e;
+        position: relative;
+        padding-top: 20px;
+        padding-bottom: 20px;
+    }
+
+    .example div 
+    {
+        background-color: transparent;
+        width: 84%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: auto;
+
+    }
+
+    .example div img{
+        padding-top: 10px;
+        padding-bottom: 10px;
+        height: auto;
+        width: 797px;
+        border-radius: 15px;
+    }
+
+    .expl{
+        background-color: #1bbf6e;
+        border-radius: 0px 0px 30px 30px;
+        margin-top: 3px;
+        height: 320px;
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        text-align: left;
+        justify-content: center;
+        align-items: center;
+        margin-bottom: -34px;
+    }
+
+    .expl div{
+        font-family: 'Baloo Bhai 2', cursive;
+        border: 2px solid transparent;
+        justify-content: center;
+        align-items: center;
+        color: aliceblue;
+        text-align: left;
+        font-size: 1.3rem;
+        padding: 0px 46px;
+        color: white;
+        border-radius: 0px 0px 30px 30px;
+        margin-top: -18px;
+        padding-bottom: 8px;
+        background-color: transparent;
+        width: 78.3%;
+        margin-bottom: 4px;
+    }
+
+    .button-123{
+        margin-top: 30px;
+        display: flex;
+        justify-content: center;
+        padding: 0;
+    }
+
+    .btn-123{
+        font-family: 'Baloo Bhai 2', cursive;
+        padding: 8px 18px;
+        border-radius: 18px;
+        background-color: #05055f;
+        color: #e6f3fe;
+        font-size: 1rem;
+        transition: all 0.2s ease;
+        line-height: 1.2;
+        min-width: 120px;
+        max-width: 180px;
+        white-space: nowrap;
+    }
+
+    .btn-123:hover{
+        color: bisque;
+        padding: 8px 20px;
+        background-color: black;
+        cursor: pointer;
+    }
+
+    .container {
+        display: flex;
+        justify-content: center;
+        width: 100%;
+    }
+
+    .pill {
+        display: inline-flex;
+        justify-content: center;
+        align-items: center;
+        width: auto;
+        min-width: 70px;
+        height: 24px;
+        border-radius: 999px;
+        background-color: #f7f9fc;
+        font-size: 0.85rem;
+        font-weight: 700;
+        letter-spacing: -0.5px;
+        text-decoration: none;
+        color: #000;
+        padding: 0 10px;
+    }
+
+    .pill.lru {
+        color: #2b5c36;
+    }
+
+    .pill.fifo {
+        color: #5bb374;
+    }
+    
+

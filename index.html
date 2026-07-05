@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title></title>
+        <link rel="stylesheet" href="css/homepage.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"/>
+        <link href="https://fonts.googleapis.com/css2?family=Baloo+Bhai+2:wght@700&family=PT+Sans&display=swap" rel="stylesheet">
+    </head>
+    <body class="home">
+        <header>
+           <nav>
+            <input type="checkbox" id="check">
+            <label for="check" class="checkbtn">
+                <i class="fas fa-bars"></i>
+            </label>
+        </nav>
+            <div class="afternav">
+                <div class="hero-content">
+                    <div class="hero-logo">
+                        <img id="siteLogo" src="img/logo.png" alt="Site logo">
+                    </div>
+                    <div>
+                        <h1>PAGE REPLACEMENT ALGORITHMS</h1>
+                    </div>
+                </div>
+                <div class="homepage-buttons-title">CHOOSE an ALGORITHMS</div>
+                <section class="homepage-buttons">
+                    <a href="fifo_simulator.html">FIFO</a>
+                    <a href="lru_simulator.html">LRU</a>
+                </section>
+                <section class="algorithm-tables">
+                    <div class="table-card">
+                        <h2>FIFO</h2>
+                        <table>
+                            <tbody>
+                                <tr><th>Algorithm</th><td>First In First Out</td></tr>
+                                <tr><th>How it works</th><td>Replaces the page that arrived first in memory.</td></tr>
+                                <tr><th>Best for</th><td>Simple, low bookkeeping implementations.</td></tr>
+                                <tr><th>Weakness</th><td>Can suffer from Belady's anomaly and poor performance.</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="table-card">
+                        <h2>LRU</h2>
+                        <table>
+                            <tbody>
+                                <tr><th>Algorithm</th><td>Least Recently Used</td></tr>
+                                <tr><th>How it works</th><td>Replaces the page that has not been used for the longest time.</td></tr>
+                                <tr><th>Best for</th><td>Workloads with temporal locality.</td></tr>
+                                <tr><th>Weakness</th><td>Higher bookkeeping overhead than FIFO.</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+                <!-- <div class="nextpage">
+                    <img src="img/background.jpg" alt="">
+                </div> -->
+            </div>
+        </header>     
+        </body>
+        <script src="js/navbar.js"></script>
+</html>

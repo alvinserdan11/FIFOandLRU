@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<title>LRU</title>
+	<meta charset="utf-8">
+	<link rel="stylesheet" href="css/simulator.css">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
+	<link href="css/bootstrap.min.css" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css?family=PT+Sans" rel="stylesheet">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"/>
+	<link href="https://fonts.googleapis.com/css2?family=Baloo+Bhai+2:wght@700&family=PT+Sans&display=swap" rel="stylesheet">
+
+</head>
+
+<body class="lru-page">
+	<div class="final">
+
+        <div class="simulator-area container-fluid" id="design">
+            <div class="home-link">
+                <a href="index.html">GO BACK TO HOME</a>
+            </div>
+            <div class="heading">
+				<h1>SIMULATOR</h1>
+			</div>
+            <h1 class="simulator-title">
+                Least Recently Used (LRU)
+            </h1>
+            <p class="simulator-description">Use the LRU simulator to track page usage and replace the least recently used page when a page fault occurs.</p>
+            <p class="simulator-description">The LRU method replaces the least recently used page first when a page fault occurs.</p>
+            <div class="simulator-card">
+                <form>
+                    <div class="simulator-inputs">
+                        <div class="form-group">
+                            <input type="number" id="frames" class="form-control" placeholder="Number of frames">
+                        </div>
+                        <div class="form-group">
+                            <input type="text" id="rs" class="form-control" placeholder="Page reference string">
+                        </div>
+                        <div class="simulator-actions">
+                            <input type="button" class="btn btn-primary" onclick="lru()" value="Simulate" id="sim">
+                            <input type="reset" class="btn btn-secondary" onClick="window.location.reload()" id="resetbtn" value="Reset" style="display:none;">
+                        </div>
+                    </div>
+                    <div id="reference-strip" class="reference-strip"></div>
+                    <div id="div1" class="table-hover simulator-results"></div>
+                </form>
+                <div id="bottom"></div>
+            </div>
+        </div>
+    </body>
+    <!-- <script type="text/javascript" src="index.js"></script> -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    
+    
+    
+    <script>
+        var count = 0;
+        var pages = [];
+        var pf;
+        var ph;
+        var f;
+        var rs;
+        var txt;
+        var replacementTrace = [];
+
+        function lru() {
+            f = Number(document.getElementById("frames").value);
+            rs = document.getElementById("rs").value;
+            var isnum = /^\d+$/.test(rs);
+            if (!Number.isFinite(f) || f <= 0) {
+                alert("Invalid input!");
+                return;
+            } else if (!isnum) {
+                alert("Use a number string (like 4761761272)");
+                return;
+            }
+
+            document.getElementById("resetbtn").style.display = "block";
+            replacementTrace = [];
+            pf = 0;
+            ph = 0;
+
+            var i, row = Number(f) + 1,
+                j, col = rs.length;
+
+            pages = new Array(row);
+            for (i = 0; i < row; i++)
+                pages[i] = new Array(col);
+
+            for (i = 0; i < row - 1; i++) {
+                for (j = 0; j < col; j++)
+                    pages[i][j] = "--";
+            }
+
+            var frameState = [];
+            var lastUsed = [];
+
+            for (j = 0; j < col; j++) {
+                var currentPage = rs[j];
+                var existingIndex = frameState.indexOf(currentPage);
+                var victim = "";
+
+                if (existingIndex !== -1) {
+                    ph++;
+                    lastUsed[existingIndex] = j;
+                    replacementTrace[j] = "";
+                    pages[row - 1][j] = "PH";
+                } else if (frameState.length < Number(f)) {
+                    frameState.push(currentPage);
+                    lastUsed.push(j);
+                    pf++;
+                    replacementTrace[j] = "";
+                    pages[row - 1][j] = "PF";
+                } else {
+                    var victimIndex = 0;
+                    var oldestUse = lastUsed[0];
+                    for (i = 1; i < frameState.length; i++) {
+                        if (lastUsed[i] < oldestUse) {
+                            oldestUse = lastUsed[i];
+                            victimIndex = i;
+                        }
+                    }
+                    victim = frameState[victimIndex];
+                    frameState[victimIndex] = currentPage;
+                    lastUsed[victimIndex] = j;
+                    replacementTrace[j] = victim;
+                    pf++;
+                    pages[row - 1][j] = "PF";
+                }
+
+                for (i = 0; i < row - 1; i++) {
+                    pages[i][j] = i < frameState.length ? frameState[i] : "--";
+                }
+            }
+
+            var $table = $("<table border='2'></table>");
+            $table.addClass('table solution-table');
+            var $tbody = $("<tbody></tbody>");
+            for (i = 0; i < row - 1; i++) {
+                var line = $("<tr></tr>");
+                line.append($("<td class='row-label'></td>").text("Frame" + (i + 1)));
+                for (j = 0; j < col; j++) {
+                    var cellValue = pages[i][j];
+                    if (!(/^\d+$/.test(cellValue))) cellValue = "";
+                    line.append($("<td></td>").text(cellValue));
+                }
+                $tbody.append(line);
+            }
+
+            $("#reference-strip").empty();
+            for (j = 0; j < col; j++) {
+                $("#reference-strip").append($("<span class='ref-box'></span>").text(rs[j]));
+            }
+
+            var $resultsLayout = $("<div class='results-layout'></div>");
+            var $mainTablePanel = $("<div class='results-main-panel'></div>");
+            $("#div1").empty().append($resultsLayout);
+
+            $table.append($tbody);
+            $mainTablePanel.append($table);
+            $resultsLayout.append($mainTablePanel);
+
+            var $statusTable = $("<table border='2'></table>");
+            $statusTable.addClass('table solution-table');
+            var $statusBody = $("<tbody></tbody>");
+            var $statusRow = $("<tr></tr>");
+            $statusRow.append($("<td class='row-label'></td>").text("Status"));
+            for (j = 0; j < col; j++) {
+                var statusValue = pages[row - 1][j];
+                if (statusValue === "PF") statusValue = "F";
+                else if (statusValue === "PH") statusValue = "H";
+                else statusValue = "";
+                var statusCell = $("<td></td>").text(statusValue);
+                if (statusValue === "F") {
+                    statusCell.css({
+                        'color': 'red',
+                        'font-weight': 'bold',
+                        'text-shadow': '0 0 6px red'
+                    });
+                } else if (statusValue === "H") {
+                    statusCell.css({
+                        'color': 'green',
+                        'font-weight': 'bold',
+                        'text-shadow': '0 0 6px green'
+                    });
+                }
+                $statusRow.append(statusCell);
+            }
+            $statusBody.append($statusRow);
+            $statusTable.append($statusBody);
+            $statusTable.appendTo($mainTablePanel);
+
+            // Build a visual solution-area trace for LRU: on a fault,
+            // insert the incoming page at the top and push others down,
+            // dropping the lowest when full. On a hit, keep frames unchanged.
+            var solutionFrames = [];
+            var solutionReplacementTrace = [];
+            var solutionReplacementType = []; // 'hit' | 'fault' | ''
+            var solutionPages = [];
+            for (i = 0; i < row - 1; i++) {
+                solutionPages[i] = new Array(col);
+                for (j = 0; j < col; j++)
+                    solutionPages[i][j] = "--";
+            }
+
+            for (j = 0; j < col; j++) {
+                var incoming = rs[j];
+                var hitIndex = solutionFrames.indexOf(incoming);
+                var removed = "";
+
+                if (hitIndex !== -1) {
+                    // Hit: move the hit page to the top, shift others down
+                    solutionFrames.splice(hitIndex, 1);
+                    solutionFrames.unshift(incoming);
+                    solutionReplacementTrace[j] = incoming;
+                    solutionReplacementType[j] = 'hit';
+                } else {
+                    // Fault: insert at top, push down, drop last if full
+                    if (solutionFrames.length < Number(f)) {
+                        // space available: just add at top
+                        solutionFrames = [incoming].concat(solutionFrames);
+                        solutionReplacementTrace[j] = "";
+                        solutionReplacementType[j] = '';
+                    } else {
+                        // full: drop last and insert at top
+                        removed = solutionFrames[solutionFrames.length - 1];
+                        solutionFrames = [incoming].concat(solutionFrames.slice(0, Number(f) - 1));
+                        solutionReplacementTrace[j] = removed;
+                        solutionReplacementType[j] = 'fault';
+                    }
+                }
+
+                // populate solutionPages columns from solutionFrames (top->bottom)
+                for (i = 0; i < row - 1; i++) {
+                    solutionPages[i][j] = i < solutionFrames.length ? solutionFrames[i] : "--";
+                }
+            }
+
+            var $solution = $("<table border='2'></table>");
+            $solution.addClass('table solution-table');
+            var $solBody = $("<tbody></tbody>");
+            for (i = 0; i < row - 1; i++) {
+                var $row2 = $("<tr></tr>");
+                $row2.append($("<td class='row-label'></td>").text(""));
+                for (j = 0; j < col; j++) {
+                    var solutionCellValue = solutionPages[i][j];
+                    if (!(/^\d+$/.test(solutionCellValue))) solutionCellValue = "";
+                    $row2.append($("<td></td>").text(solutionCellValue));
+                }
+                $solBody.append($row2);
+            }
+            $solution.append($solBody);
+            $solution.appendTo($mainTablePanel);
+
+            var $replacementTable = $("<table border='2'></table>");
+            $replacementTable.addClass('table replaced-table');
+            var $replacementBody = $("<tbody></tbody>");
+            var $replacementRow = $("<tr></tr>");
+            $replacementRow.append($("<td class='row-label'></td>").text("Replaced #"));
+            for (j = 0; j < col; j++) {
+                var val = solutionReplacementTrace[j] || "";
+                var $replacementCell = $("<td></td>").text(val);
+                if (solutionReplacementType[j] === 'fault' && val) {
+                    $replacementCell.css({
+                        'color': 'red',
+                        'font-weight': 'bold',
+                        'text-shadow': '0 0 6px red'
+                    });
+                } else if (solutionReplacementType[j] === 'hit' && val) {
+                    $replacementCell.css({
+                        'color': 'green',
+                        'font-weight': 'bold',
+                        'text-shadow': '0 0 6px green'
+                    });
+                }
+                $replacementRow.append($replacementCell);
+            }
+            $replacementBody.append($replacementRow);
+            $replacementTable.append($replacementBody);
+            $replacementTable.appendTo($mainTablePanel);
+
+            var $summary = $("<table border='2'></table>");
+            $summary.addClass('table summary-table');
+            $summary.css({
+                'max-width': '520px',
+                'margin': '20px auto',
+                'text-align': 'center'
+            });
+            var $summaryBody = $("<tbody></tbody>");
+            var total = pf + ph;
+            var hitRatio = total > 0 ? (ph / total).toFixed(2) : "0.00";
+            var faultRatio = total > 0 ? (pf / total).toFixed(2) : "0.00";
+            $summaryBody.append($("<tr><td style='color:red;font-weight:bold;'>Faults</td><td style='color:red;font-weight:bold;'>" + pf + "</td></tr>"));
+            $summaryBody.append($("<tr><td style='color:red;font-weight:bold;'>Fault Ratio</td><td style='color:red;font-weight:bold;'>" + faultRatio + "</td></tr>"));
+            $summaryBody.append($("<tr><td style='color:#16a34a;font-weight:bold;text-shadow:0 0 8px #16a34a;'>Hits</td><td style='color:#16a34a;font-weight:bold;text-shadow:0 0 8px #16a34a;'>" + ph + "</td></tr>"));
+            $summaryBody.append($("<tr><td style='color:#16a34a;font-weight:bold;text-shadow:0 0 8px #16a34a;'>Hit Ratio</td><td style='color:#16a34a;font-weight:bold;text-shadow:0 0 8px #16a34a;'>" + hitRatio + "</td></tr>"));
+            $summary.append($summaryBody);
+            var $summaryPanel = $("<div class='results-summary-panel'></div>");
+            $summaryPanel.append($summary);
+            $resultsLayout.append($summaryPanel);
+
+            setTimeout(function () {
+                var resultsSection = document.querySelector(".simulator-results");
+                if (resultsSection) {
+                    resultsSection.scrollIntoView({ behavior: "smooth", block: "center" });
+                } else {
+                    var resultsContainer = document.querySelector(".simulator-card");
+                    if (resultsContainer) {
+                        resultsContainer.scrollIntoView({ behavior: "smooth", block: "start" });
+                    }
+                }
+            }, 50);
+        }
+    </script>
